@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Score</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        input, button { font-size: 16px; margin: 5px; padding: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Update Score</h1>
+    <input id="team1" placeholder="Team 1 Name"><br>
+    <input id="team2" placeholder="Team 2 Name"><br>
+    <input id="runs" placeholder="Runs"><br>
+    <input id="wickets" placeholder="Wickets"><br>
+    <input id="overs" placeholder="Overs"><br>
+    <button onclick="updateScore()">Update</button>
+
+    <script>
+        async function updateScore() {
+            let data = {
+                team1: document.getElementById("team1").value,
+                team2: document.getElementById("team2").value,
+                runs: document.getElementById("runs").value,
+                wickets: document.getElementById("wickets").value,
+                overs: document.getElementById("overs").value
+            };
+
+            let response = await fetch('https://api.github.com/repos/YOUR-USERNAME/cricket-scoreboard/contents/score.json', {
+                method: "PUT",
+                headers: {
+                    "Authorization": "token YOUR-GITHUB-TOKEN",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: "Updated Score",
+                    content: btoa(JSON.stringify(data, null, 2)),
+                    sha: await getSha()
+                })
+            });
+
+            if (response.ok) {
+                alert("Score Updated Successfully!");
+            } else {
+                alert("Failed to Update Score!");
+            }
+        }
+
+        async function getSha() {
+            let response = await fetch('https://api.github.com/repos/YOUR-USERNAME/cricket-scoreboard/contents/score.json');
+            let fileData = await response.json();
+            return fileData.sha;
+        }
+    </script>
+</body>
+</html>
