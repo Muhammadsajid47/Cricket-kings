@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Cricket Score</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background: #222; color: white; }
+        #scoreboard { font-size: 24px; background: #444; padding: 10px; border-radius: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Live Cricket Score</h1>
+    <div id="scoreboard">Loading...</div>
+
+    <script>
+        async function fetchScore() {
+            let response = await fetch('score.json'); // Fetch score data from JSON file
+            let data = await response.json();
+            
+            document.getElementById("scoreboard").innerHTML = 
+                `${data.team1} ${data.runs}/${data.wickets} (${data.overs}) vs ${data.team2}`;
+        }
+
+        setInterval(fetchScore, 5000); // Refresh every 5 seconds
+        fetchScore();
+    </script>
+</body>
+</html>
